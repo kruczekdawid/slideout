@@ -54,6 +54,7 @@ function Slideout(options) {
 
   // Sets default values
   this._startOffsetX = 0;
+  this._startOffsetY = 0;
   this._currentOffsetX = 0;
   this._opening = false;
   this._moved = false;
@@ -190,6 +191,7 @@ Slideout.prototype._initTouchEvents = function() {
     self._moved = false;
     self._opening = false;
     self._startOffsetX = eve.touches[0].pageX;
+    self._startOffsetY = eve.touches[0].pageY;
     self._preventOpen = (!self._touch || (!self.isOpen() && self.menu.clientWidth !== 0));
   });
 
@@ -219,11 +221,12 @@ Slideout.prototype._initTouchEvents = function() {
     if (scrolling || self._preventOpen || typeof eve.touches === 'undefined') { return; }
 
     var dif_x = eve.touches[0].clientX - self._startOffsetX;
+    var dif_y = eve.touches[0].clientY - self._startOffsetY;
     var translateX = self._currentOffsetX = dif_x;
 
     if (Math.abs(translateX) > self._padding) { return; }
 
-    if (Math.abs(dif_x) > 20) {
+    if (Math.abs(dif_x) > 10 && Math.abs(dif_y) < 20) {
       self._opening = true;
 
       var oriented_dif_x = dif_x * self._orientation;
